@@ -1,9 +1,4 @@
-@font-face {
-    font-family: 'Stinger Fit';
-    src: url('/src/assets/fonts/StingerFit-Regular.otf') format('truetype');
-    font-weight: normal;
-    font-style: normal;
-}
+@import url('https://fonts.googleapis.com/css2?family=Zalando+Sans:ital,wght@0,200..900;1,200..900&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -11,4 +6,11 @@
 
 html {
   @apply scroll-smooth;
+}
+
+.zalando-sans{
+  font-family: "Zalando Sans", sans-serif;
+  font-optical-sizing: auto;
+  font-variation-settings:
+    "wdth" 100;
 }

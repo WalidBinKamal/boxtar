@@ -1,8 +1,10 @@
 import { useState } from "react";
 import group from '../assets/bg-&-products/group-1.png'
 import Swal from "sweetalert2";
+import useAxiosPublic from "../Hooks/userAxiosPublic";
 
 const Order = () => {
+    const axiosPublic = useAxiosPublic()
     const [quantity, setQuantity] = useState(1); // default quantity
     const pricePerItem = 499; // price in Taka
 
@@ -30,25 +32,35 @@ const Order = () => {
             totalPrice: totalPrice,
         };
 
-        console.log("Order Submitted:", orderData);
         Swal.fire({
             title: "Do you want to confirm the order?",
-
             confirmButtonText: "Confirm",
             showCancelButton: true,
             denyButtonText: `Cancel`
-        }).then((result) => {
+        }).then(async (result) => {
             /* Read more about isConfirmed, isDenied below */
             if (result.isConfirmed) {
-                Swal.fire("Confirmed!", "", "success");
-                e.target.reset();
-                setQuantity(1);
-            } else if (result.isDenied) {
-                Swal.fire("Changes are not saved", "", "info");
+                const data = await axiosPublic.post('/orders', orderData)
+                console.log(data)
+                if (data.data.insertedId) {
+                    Swal.fire("Confirmed!", `Your order id is: ${data.data.orderID}`, "success");
+                    e.target.reset();
+                    setQuantity(1);
+                }
+                else {
+                    Swal.fire({
+                        icon: "error",
+                        title: "Oops...",
+                        text: "Something went wrong!",
+                        footer: '<a href="#">Your order is not confirmed.</a>'
+                    });
+                }
             }
         });
 
     };
+
+
     return (
         <section id="order" className="scroll-mt-24">
             <div className="md:my-6 mt-4">

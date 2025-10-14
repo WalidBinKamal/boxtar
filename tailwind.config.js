@@ -7,7 +7,7 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        stinger: ['"Stinger Fit"', 'sans-serif'], 
+        "zalando-sans": ['"zalando-sans"', 'sans-serif'], 
       },
     },
   },
