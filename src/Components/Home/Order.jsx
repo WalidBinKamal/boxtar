@@ -2,12 +2,14 @@ import { useState } from "react";
 import group from '../../assets/bg-&-products/group-1.webp'
 import Swal from "sweetalert2";
 import useAxiosPublic from "../../Hooks/useAxiosPublic";
+import { trackEvent } from "../../metaPixel";
 
 const Order = () => {
     const axiosPublic = useAxiosPublic()
     const [quantity, setQuantity] = useState(1); // default quantity
-    const pricePerItem = 499; // price in Taka
+    const pricePerItem = 499; // price in Taka   
 
+    //quantity change handling
     const handleQuantityChange = (e) => {
         const value = parseInt(e.target.value);
         if (!isNaN(value) && value > 0) {
@@ -31,6 +33,27 @@ const Order = () => {
             quantity: quantity,
             totalPrice: totalPrice,
         };
+
+        //hanbdling meta pixel
+        const handleSendPurchaseEvent = async () => {
+            const eventID = crypto.randomUUID()
+
+            //client side pixel tracking
+            trackEvent(
+                "Purchase",
+                {
+                    value: orderData.totalPrice,
+                    currency: "BDT"
+                },
+                eventID
+            )
+            const res = await axiosPublic.post("/api/orders", {
+                phone: orderData.phone,
+                orderAmount: orderData.totalPrice,
+                eventID
+            });
+            console.log("Sent purchase event to backend:", res);
+        }
 
 
         // <p><strong>Quantity:</strong> ${orderData.quantity}</p>
@@ -64,7 +87,7 @@ const Order = () => {
                         icon: "success",
                         confirmButtonText: "OK",
                     });
-
+                    handleSendPurchaseEvent()
                     e.target.reset();
                     setQuantity(1);
                 }

@@ -8,7 +8,7 @@ const Home = () => {
     return (
         <div>
             <Helmet>
-                <title>Boxtar | Home</title>
+                <title>Boxtar</title>
             </Helmet>
             {/* <div>Home</div> */}
             <Features></Features>
